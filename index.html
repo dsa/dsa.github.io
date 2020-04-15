@@ -5,32 +5,34 @@
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<style type="text/css">
 		html, body {
+			margin: 0;
+			padding: 0;
 			font-family: 'Roboto', sans-serif;
 			background: transparent url('./bg.jpg');
 		}
 		#board {
-			width: 100%;
-			border-spacing: 10px;
+			display: grid;
+			grid-template: repeat(5, 1fr) / repeat(5, 1fr);
+			width: 100vw;
+			height: 100vh;
+			grid-gap: 0.75em;
+			padding: 0.75em;
 		}
-		td {
-			width: 20%;
-			height: 96px;
-			text-align: center;
+		.card {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			border-radius: 5px;
 			box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   			transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-  			vertical-align: middle;
 		}
-		td:hover {
+		.card:hover {
 			box-shadow: 0 7px 14px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22);
 		}
-		td span {
-			display: inline-block;
+		.card span {
 			text-transform: uppercase;
 			font-weight: bold;
-			padding: 12px 24px;
 			background-color: white;
-			border-radius: 5px;
 			-webkit-touch-callout: none; /* iOS Safari */
 			-webkit-user-select: none;   /* Chrome/Safari/Opera */
 			-khtml-user-select: none;    /* Konqueror */
@@ -40,32 +42,33 @@
 			                                not supported by any browser */
 			letter-spacing: 0.75px;
 		}
-		td.unguessed {
+		.card.unguessed {
 			background-color: #fff;
 		}
-		td.red,
-		td.blue,
-		td.neutral,
-		td.black {
+		.card.red,
+		.card.blue,
+		.card.neutral,
+		.card.black {
 			background-color: transparent;
 			background-size: cover;
+			background-position: center;
 		}
-		td.red span,
-		td.blue span,
-		td.black span,
-		td.neutral span {
+		.card.red span,
+		.card.blue span,
+		.card.black span,
+		.card.neutral span {
 			display: none;
 		}
-		td.red {
+		.card.red {
 			background-image: url('./red.jpg');
 		}
-		td.blue {
+		.card.blue {
 			background-image: url('./blue.jpg');
 		}
-		td.neutral {
+		.card.neutral {
 			background-image: url('./neutral.jpg');
 		}
-		td.black {
+		.card.black {
 			background-image: url('./black.jpg');
 		}
 	</style>
@@ -81,20 +84,20 @@
 	</script>
 </head>
 <body>
-	<table id="board"></table>
+	<div id="board"></div>
 	<script type="text/javascript">
 		function addClick($elt) {
 			$elt.click(function() {
 				if ($elt.is(".unguessed")) {
-					$elt.removeClass().addClass("red")
+					$elt.removeClass().addClass("card red")
 				} else if ($elt.is(".red")) {
-					$elt.removeClass().addClass("blue")
+					$elt.removeClass().addClass("card blue")
 				} else if ($elt.is(".blue")) {
-					$elt.removeClass().addClass("neutral")
+					$elt.removeClass().addClass("card neutral")
 				} else if ($elt.is(".neutral")) {
-					$elt.removeClass().addClass("black")
+					$elt.removeClass().addClass("card black")
 				} else {
-					$elt.removeClass().addClass("unguessed")
+					$elt.removeClass().addClass("card unguessed")
 				}
 			})
 		}
@@ -109,18 +112,15 @@
 		}
 		var $board = $("#board")
 		for (var i = 0; i < ROWS; i++) {
-			var $row = $("<tr></tr>")
-			$row.addClass(i)
 			for (var j = 0; j < COLS; j++) {
-				var $col = $("<td></td>")
-				$col.addClass("unguessed")
-				addClick($col)
-				var $word = $("<span></span>")
+				var $card = $("<div class='card'></div>")
+				$card.addClass("unguessed")
+				addClick($card)
+				var $word = $("<span class='word'></span>")
 				$word.html(chosenWords[i*ROWS + j])
-				$col.append($word)
-				$row.append($col)
+				$card.append($word)
+				$board.append($card)
 			}
-			$board.append($row)
 		}
 	</script>
 </body>
